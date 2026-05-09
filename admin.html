@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Özbek Pide Admin Panel</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+
+body{display:flex;height:100vh;background:#1e1e2f;color:white;overflow:hidden}
+
+.sidebar{width:250px;min-width:250px;background:linear-gradient(180deg,#2c2c54,#1e1e2f);padding:20px;display:flex;flex-direction:column;animation:slideIn 0.7s ease;z-index:1000}
+@keyframes slideIn{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+.logo{font-size:20px;font-weight:bold;margin-bottom:30px;text-align:center;color:#f39c12}
+
+.menu-item{padding:14px;border-radius:10px;margin-bottom:10px;cursor:pointer;transition:0.3s}
+.menu-item:hover{background:#f39c12}
+.active{background:#e67e22}
+
+.topbar{display:none;position:fixed;top:0;left:0;right:0;height:60px;background:#2c2c54;align-items:center;justify-content:space-between;padding:0 15px;z-index:1100;box-shadow:0 5px 20px rgba(0,0,0,0.4)}
+.menu-btn{font-size:22px;cursor:pointer}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:0.3s;z-index:900}
+.overlay.active{opacity:1;pointer-events:auto}
+
+.main{flex:1;padding:30px;animation:fadeIn 1s ease;overflow:auto;width:100%}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.header{font-size:24px;margin-bottom:20px}
+
+.card{background:#2c2c54;padding:20px;border-radius:15px;margin-bottom:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+
+input,select,button{padding:10px;border:none;border-radius:8px;margin-top:10px}
+input,select{width:100%}
+button{background:#f39c12;color:white;cursor:pointer}
+button:hover{background:#e67e22}
+
+.list-item{ padding:14px; background:#3b3b6d; margin-top:12px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; box-shadow:0 4px 15px rgba(0,0,0,0.25); transition:0.3s; }
+
+.list-item:hover{ transform:translateY(-2px); background:#44447a; }
+
+.item-left{ display:flex; align-items:center; gap:12px; flex:1; min-width:0; }
+
+.item-left img{ width:55px; height:55px; border-radius:12px; object-fit:cover; flex-shrink:0; }
+
+.item-left span{ font-size:14px; line-height:1.4; word-break:break-word; white-space:normal; }
+
+.actions{ display:flex; align-items:center; gap:8px; flex-wrap:nowrap; }
+
+.actions button{ padding:8px 12px; font-size:13px; border-radius:8px; font-weight:600; min-width:70px; }
+
+.actions button:first-child{ background:#3498db; }
+
+.actions button:last-child{ background:#e74c3c; }
+
+.error-msg{color:#ff6b6b;font-size:12px;margin-top:5px}
+.input-error{border:2px solid #ff6b6b !important}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:2000}
+.modal.active{display:flex}
+.modal-content{width:90%;max-width:400px;background:#2c2c54;padding:20px;border-radius:15px}
+.close{float:right;cursor:pointer;font-size:18px;color:#f39c12}
+
+.mobile-logo{ flex:1; text-align:center; font-size:20px; font-weight:bold; color:#f39c12; margin-right:22px; }
+
+@media(max-width:768px){
+
+.topbar{ display:flex }
+
+.sidebar{ position:fixed; height:100%; left:-260px; top:0; transition:0.3s }
+
+.sidebar.active{ left:0 }
+
+.main{ padding:80px 12px 20px 12px }
+
+.list-item{ flex-direction:column; align-items:stretch; padding:12px; }
+
+.item-left{ width:100%; }
+
+.item-left span{ font-size:13px; }
+
+.actions{ width:100%; display:flex; justify-content:space-between; margin-top:10px; }
+
+.actions button{ flex:1; padding:10px; font-size:13px; }
+
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  <div class="mobile-logo">🍞 Özbek Pide</div>
+</div>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="sidebar" id="sidebar">
+  <div class="logo">🍞 Özbek Pide</div>
+  <div class="menu-item active" onclick="showPage('kategori')">Kategoriler</div>
+  <div class="menu-item" onclick="showPage('urun')">Ürünler</div>
+  <div class="menu-item" onclick="logout()">Çıkış Yap</div>
+</div>
+
+<div class="main">
+
+  <div id="kategoriPage">
+    <div class="header">Kategoriler</div>
+
+    <div class="card">
+      <h3>Kategori Ekle</h3>
+      <input type="text" id="kategoriAd" placeholder="Kategori adı">
+      <div id="errKatAd" class="error-msg"></div>
+      <input type="file" id="kategoriFoto" accept="image/*">
+      <div id="errKatFoto" class="error-msg"></div>
+      <button onclick="addKategori()">Ekle</button>
+    </div>
+
+    <div class="card">
+      <h3>Kategori Listesi</h3>
+      <div id="kategoriList"></div>
+    </div>
+  </div>
+
+  <div id="urunPage" style="display:none">
+    <div class="header">Ürünler</div>
+
+    <div class="card">
+      <h3>Ürün Ekle</h3>
+      <input type="text" id="urunAd" placeholder="Ürün adı">
+      <div id="errUrunAd" class="error-msg"></div>
+
+      <input type="number" id="urunFiyat" placeholder="Ürün fiyatı">
+      <div id="errUrunFiyat" class="error-msg"></div>
+
+      <input type="file" id="urunFoto" accept="image/*">
+      <div id="errUrunFoto" class="error-msg"></div>
+
+      <select id="urunKategori"></select>
+      <div id="errUrunKat" class="error-msg"></div>
+
+      <button onclick="addUrun()">Ekle</button>
+    </div>
+
+    <div class="card">
+      <h3>Ürün Listesi</h3>
+      <div id="urunList"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL KATEGORİ -->
+<div class="modal" id="kategoriModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('kategoriModal')">✖</span>
+    <h3>Kategori Düzenle</h3>
+    <input type="text" id="editKategoriAd">
+    <div id="errEditKat" class="error-msg"></div>
+    <input type="file" id="editKategoriFoto" accept="image/*">
+    <button onclick="saveKategoriEdit()">Kaydet</button>
+  </div>
+</div>
+
+<!-- MODAL ÜRÜN -->
+<div class="modal" id="urunModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('urunModal')">✖</span>
+    <h3>Ürün Düzenle</h3>
+    <input type="text" id="editUrunAd">
+    <div id="errEditUrunAd" class="error-msg"></div>
+
+    <input type="number" id="editUrunFiyat">
+    <div id="errEditUrunFiyat" class="error-msg"></div>
+
+    <input type="file" id="editUrunFoto" accept="image/*">
+
+    <select id="editUrunKategori"></select>
+    <div id="errEditUrunKat" class="error-msg"></div>
+
+    <button onclick="saveUrunEdit()">Kaydet</button>
+  </div>
+</div>
+
+<script type="module">
+    
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+deleteDoc,
+updateDoc,
+doc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+import {
+getAuth,
+onAuthStateChanged,
+signOut
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+apiKey: "AIzaSyBR7zcqJe9lAAGngONaCj8LG6q7AejWHL0",
+authDomain: "limoncafe.firebaseapp.com",
+projectId: "limoncafe",
+storageBucket: "limoncafe.firebasestorage.app",
+messagingSenderId: "495889481405",
+appId: "1:495889481405:web:735b029d32c156754781d4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+/* AUTH CONTROL */
+
+onAuthStateChanged(auth,(user)=>{
+
+if(user){
+
+loadData();
+
+}else{
+
+window.location.href="login.html";
+
+}
+
+});
+
+/* DATA */
+
+let kategoriler=[];
+let urunler=[];
+
+let editKategoriId=null;
+let editUrunId=null;
+
+/* MENU */
+
+window.toggleMenu=function(){
+document.getElementById('sidebar').classList.toggle('active');
+document.getElementById('overlay').classList.toggle('active');
+}
+
+window.showPage=function(page){
+
+document.getElementById('kategoriPage').style.display='none';
+document.getElementById('urunPage').style.display='none';
+
+document.querySelectorAll('.menu-item').forEach(e=>e.classList.remove('active'));
+
+if(page==='kategori'){
+document.getElementById('kategoriPage').style.display='block';
+document.querySelectorAll('.menu-item')[0].classList.add('active');
+}else{
+document.getElementById('urunPage').style.display='block';
+document.querySelectorAll('.menu-item')[1].classList.add('active');
+}
+
+if(window.innerWidth<768)toggleMenu();
+}
+
+/* ERRORS */
+
+function clearErrors(){
+document.querySelectorAll('.error-msg').forEach(e=>e.innerText='');
+}
+
+function showError(id,msg){
+document.getElementById(id).innerText=msg;
+}
+
+/* LOAD */
+
+async function loadData(){
+
+const katSnap=await getDocs(collection(db,"kategoriler"));
+
+kategoriler=katSnap.docs.map(doc=>({
+id:doc.id,
+...doc.data()
+}));
+
+const urunSnap=await getDocs(collection(db,"urunler"));
+
+urunler=urunSnap.docs.map(doc=>({
+id:doc.id,
+...doc.data()
+}));
+
+renderKategori();
+renderKategoriSelect();
+renderUrun();
+}
+
+/* KATEGORİ */
+
+window.addKategori=async function(){
+
+clearErrors();
+
+let ad=document.getElementById('kategoriAd');
+let foto=document.getElementById('kategoriFoto');
+
+let ok=true;
+
+if(!ad.value.trim()){
+showError('errKatAd','Zorunlu');
+ok=false;
+}
+
+if(!foto.files[0]){
+showError('errKatFoto','Zorunlu');
+ok=false;
+}
+
+if(!ok)return;
+
+let r=new FileReader();
+
+r.onload=async e=>{
+
+await addDoc(collection(db,"kategoriler"),{
+ad:ad.value,
+foto:e.target.result
+});
+
+ad.value='';
+foto.value='';
+
+loadData();
+}
+
+r.readAsDataURL(foto.files[0]);
+}
+
+function renderKategori(){
+
+let list=document.getElementById('kategoriList');
+
+list.innerHTML='';
+
+kategoriler.forEach((k,i)=>{
+
+let div=document.createElement('div');
+
+div.className='list-item';
+
+div.innerHTML=`
+<div class='item-left'>
+<img src='${k.foto}'>
+<span>${k.ad}</span>
+</div>
+
+<div class='actions'>
+<button onclick='openKategoriEdit(${i})'>Düzenle</button>
+<button onclick='deleteKategori("${k.id}")'>Sil</button>
+</div>
+`;
+
+list.appendChild(div);
+
+});
+}
+
+window.deleteKategori=async function(id){
+
+await deleteDoc(doc(db,"kategoriler",id));
+
+loadData();
+}
+
+window.openKategoriEdit=function(i){
+
+editKategoriId=kategoriler[i].id;
+
+document.getElementById('editKategoriAd').value=kategoriler[i].ad;
+
+document.getElementById('kategoriModal').classList.add('active');
+}
+
+window.saveKategoriEdit=async function(){
+
+let ad=document.getElementById('editKategoriAd');
+let foto=document.getElementById('editKategoriFoto');
+
+if(!ad.value.trim()){
+showError('errEditKat','Zorunlu');
+return;
+}
+
+let updateData={
+ad:ad.value
+};
+
+if(foto.files[0]){
+
+let r=new FileReader();
+
+r.onload=async e=>{
+
+updateData.foto=e.target.result;
+
+await updateDoc(doc(db,"kategoriler",editKategoriId),updateData);
+
+foto.value='';
+
+closeModal('kategoriModal');
+
+loadData();
+}
+
+r.readAsDataURL(foto.files[0]);
+
+}else{
+
+await updateDoc(doc(db,"kategoriler",editKategoriId),updateData);
+
+closeModal('kategoriModal');
+
+loadData();
+}
+}
+
+function renderKategoriSelect(){
+
+let s=document.getElementById('urunKategori');
+let e=document.getElementById('editUrunKategori');
+
+s.innerHTML='';
+e.innerHTML='';
+
+kategoriler.forEach(k=>{
+
+s.innerHTML+=`<option value="${k.ad}">${k.ad}</option>`;
+
+e.innerHTML+=`<option value="${k.ad}">${k.ad}</option>`;
+
+});
+}
+
+/* ÜRÜN */
+
+window.addUrun=async function(){
+
+clearErrors();
+
+let ad=document.getElementById('urunAd');
+let fiyat=document.getElementById('urunFiyat');
+let foto=document.getElementById('urunFoto');
+let kat=document.getElementById('urunKategori');
+
+let ok=true;
+
+if(!ad.value.trim()){
+showError('errUrunAd','Zorunlu');
+ok=false;
+}
+
+if(!fiyat.value){
+showError('errUrunFiyat','Zorunlu');
+ok=false;
+}
+
+if(!foto.files[0]){
+showError('errUrunFoto','Zorunlu');
+ok=false;
+}
+
+if(!kat.value){
+showError('errUrunKat','Zorunlu');
+ok=false;
+}
+
+if(!ok)return;
+
+let r=new FileReader();
+
+r.onload=async e=>{
+
+await addDoc(collection(db,"urunler"),{
+ad:ad.value,
+fiyat:fiyat.value,
+kategori:kat.value,
+foto:e.target.result
+});
+
+ad.value='';
+fiyat.value='';
+foto.value='';
+
+loadData();
+}
+
+r.readAsDataURL(foto.files[0]);
+}
+
+function renderUrun(){
+
+let list=document.getElementById('urunList');
+
+list.innerHTML='';
+
+urunler.forEach((u,i)=>{
+
+let div=document.createElement('div');
+
+div.className='list-item';
+
+div.innerHTML=`
+<div class='item-left'>
+<img src='${u.foto}'>
+<span>${u.ad} - ${u.fiyat}₺ (${u.kategori})</span>
+</div>
+
+<div class='actions'>
+<button onclick='openUrunEdit(${i})'>Düzenle</button>
+<button onclick='deleteUrun("${u.id}")'>Sil</button>
+</div>
+`;
+
+list.appendChild(div);
+
+});
+}
+
+window.deleteUrun=async function(id){
+
+await deleteDoc(doc(db,"urunler",id));
+
+loadData();
+}
+
+window.openUrunEdit=function(i){
+
+editUrunId=urunler[i].id;
+
+document.getElementById('editUrunAd').value=urunler[i].ad;
+
+document.getElementById('editUrunFiyat').value=urunler[i].fiyat;
+
+document.getElementById('editUrunKategori').value=urunler[i].kategori;
+
+document.getElementById('urunModal').classList.add('active');
+}
+
+window.saveUrunEdit=async function(){
+
+let ad=document.getElementById('editUrunAd');
+let fiyat=document.getElementById('editUrunFiyat');
+let kat=document.getElementById('editUrunKategori');
+let foto=document.getElementById('editUrunFoto');
+
+if(!ad.value.trim()||!fiyat.value||!kat.value){
+return;
+}
+
+let updateData={
+ad:ad.value,
+fiyat:fiyat.value,
+kategori:kat.value
+};
+
+if(foto.files[0]){
+
+let r=new FileReader();
+
+r.onload=async e=>{
+
+updateData.foto=e.target.result;
+
+await updateDoc(doc(db,"urunler",editUrunId),updateData);
+
+foto.value='';
+
+closeModal('urunModal');
+
+loadData();
+}
+
+r.readAsDataURL(foto.files[0]);
+
+}else{
+
+await updateDoc(doc(db,"urunler",editUrunId),updateData);
+
+closeModal('urunModal');
+
+loadData();
+}
+}
+
+/* LOGOUT */
+
+window.logout=async function(){
+
+await signOut(auth);
+
+window.location.href="login.html";
+
+}
+
+/* MODAL */
+
+window.closeModal=function(id){
+document.getElementById(id).classList.remove('active');
+}
+
+
+</script>
+
+</body>
+</html>
