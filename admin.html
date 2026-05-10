@@ -362,20 +362,13 @@ div.innerHTML=`
 
 <div class='actions'>
 <button onclick='openKategoriEdit(${i})'>Düzenle</button>
-<button onclick='deleteKategori("${k.id}")'>Sil</button>
+<button onclick='openDeleteModal("kategori","${k.id}","${k.ad}")'>Sil</button>
 </div>
 `;
 
 list.appendChild(div);
 
 });
-}
-
-window.deleteKategori=async function(id){
-
-await deleteDoc(doc(db,"kategoriler",id));
-
-loadData();
 }
 
 window.openKategoriEdit=function(i){
@@ -523,20 +516,13 @@ div.innerHTML=`
 
 <div class='actions'>
 <button onclick='openUrunEdit(${i})'>Düzenle</button>
-<button onclick='deleteUrun("${u.id}")'>Sil</button>
+<button onclick='openDeleteModal("urun","${u.id}","${u.ad}")'>Sil</button>
 </div>
 `;
 
 list.appendChild(div);
 
 });
-}
-
-window.deleteUrun=async function(id){
-
-await deleteDoc(doc(db,"urunler",id));
-
-loadData();
 }
 
 window.openUrunEdit=function(i){
@@ -608,6 +594,63 @@ window.location.href="login.html";
 
 }
 
+
+/* DELETE CONFIRM SYSTEM */
+
+let deleteType = null;
+let deleteId = null;
+
+window.openDeleteModal = function(type,id,name){
+
+deleteType = type;
+deleteId = id;
+
+const text = document.getElementById('deleteText');
+
+if(type === 'kategori'){
+
+text.innerText = `"${name}" kategorisini silmek istediğinize emin misiniz?`;
+
+}else{
+
+text.innerText = `"${name}" ürününü silmek istediğinize emin misiniz?`;
+
+}
+
+document.getElementById('deleteModal').classList.add('active');
+
+}
+
+window.closeDeleteModal = function(){
+
+document.getElementById('deleteModal').classList.remove('active');
+
+deleteType = null;
+deleteId = null;
+
+}
+
+document.getElementById('confirmDeleteBtn').onclick = async function(){
+
+if(deleteType === 'kategori'){
+
+await deleteDoc(doc(db,"kategoriler",deleteId));
+
+}
+
+if(deleteType === 'urun'){
+
+await deleteDoc(doc(db,"urunler",deleteId));
+
+}
+
+closeDeleteModal();
+
+loadData();
+
+}
+
+
 /* MODAL */
 
 window.closeModal=function(id){
@@ -616,6 +659,51 @@ document.getElementById(id).classList.remove('active');
 
 
 </script>
+
+
+<!-- DELETE MODAL -->
+
+<div class="modal" id="deleteModal">
+
+<div class="modal-content" style="max-width:350px;text-align:center">
+
+<h3 style="margin-bottom:15px;color:#f39c12">
+Silme Onayı
+</h3>
+
+<p id="deleteText" style="margin-bottom:20px;line-height:1.5">
+Bu öğeyi silmek istediğinize emin misiniz?
+</p>
+
+<div style="display:flex;gap:10px">
+
+<button 
+id="confirmDeleteBtn"
+style="
+flex:1;
+background:#e74c3c;
+font-weight:bold;
+padding:12px;
+">
+Evet
+</button>
+
+<button 
+onclick="closeDeleteModal()"
+style="
+flex:1;
+background:#555;
+font-weight:bold;
+padding:12px;
+">
+Hayır
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 </body>
 </html>
