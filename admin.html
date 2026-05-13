@@ -85,6 +85,72 @@ button:hover{background:#e67e22}
 .actions button{ flex:1; padding:10px; font-size:13px; }
 
 }
+
+/* SUCCESS POPUP */
+
+.success-popup{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.55);
+backdrop-filter:blur(4px);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:9999;
+
+opacity:0;
+pointer-events:none;
+transition:0.35s;
+}
+
+.success-popup.show{
+opacity:1;
+pointer-events:auto;
+}
+
+.success-box{
+background:linear-gradient(180deg,#2c2c54,#1e1e2f);
+padding:28px 24px;
+border-radius:22px;
+width:90%;
+max-width:340px;
+text-align:center;
+box-shadow:0 20px 50px rgba(0,0,0,0.45);
+
+transform:scale(0.8);
+transition:0.35s;
+}
+
+.success-popup.show .success-box{
+transform:scale(1);
+}
+
+.success-icon{
+width:75px;
+height:75px;
+border-radius:50%;
+background:linear-gradient(135deg,#27ae60,#2ecc71);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:38px;
+margin:0 auto 18px auto;
+box-shadow:0 10px 25px rgba(46,204,113,0.35);
+}
+
+.success-title{
+font-size:22px;
+font-weight:bold;
+margin-bottom:10px;
+color:white;
+}
+
+.success-message{
+font-size:14px;
+line-height:1.5;
+color:#dcdde1;
+}
+
 </style>
 </head>
 <body>
@@ -112,7 +178,7 @@ button:hover{background:#e67e22}
       <h3>Kategori Ekle</h3>
       <input type="text" id="kategoriAd" placeholder="Kategori adı">
       <div id="errKatAd" class="error-msg"></div>
-      <input type="file" id="kategoriFoto" accept="image/*,.heic,.heif">
+      <input type="file" id="kategoriFoto" accept="image/*,.heic,.heif" >
       <div id="errKatFoto" class="error-msg"></div>
       <button onclick="addKategori()">Ekle</button>
     </div>
@@ -158,7 +224,7 @@ button:hover{background:#e67e22}
     <h3>Kategori Düzenle</h3>
     <input type="text" id="editKategoriAd">
     <div id="errEditKat" class="error-msg"></div>
-    <input type="file" id="editKategoriFoto" accept="image/*,.heic,.heif">
+    <input type="file" id="editKategoriFoto" accept="image/*,.heic,.heif" >
     <button onclick="saveKategoriEdit()">Kaydet</button>
   </div>
 </div>
@@ -174,13 +240,35 @@ button:hover{background:#e67e22}
     <input type="number" id="editUrunFiyat">
     <div id="errEditUrunFiyat" class="error-msg"></div>
 
-    <input type="file" id="editUrunFoto" accept="image/*,.heic,.heif">
+    <input type="file" id="editUrunFoto" accept="image/*,.heic,.heif" >
 
     <select id="editUrunKategori"></select>
     <div id="errEditUrunKat" class="error-msg"></div>
 
     <button onclick="saveUrunEdit()">Kaydet</button>
   </div>
+</div>
+
+<!-- SUCCESS POPUP -->
+
+<div id="successPopup" class="success-popup">
+
+<div class="success-box">
+
+<div class="success-icon">
+✔
+</div>
+
+<div class="success-title">
+Başarılı
+</div>
+
+<div class="success-message" id="successMessage">
+İşlem başarıyla tamamlandı
+</div>
+
+</div>
+
 </div>
 
 <script type="module">
@@ -365,6 +453,24 @@ function showError(id,msg){
 document.getElementById(id).innerText=msg;
 }
 
+/* SUCCESS POPUP */
+
+function showSuccess(message){
+
+const popup = document.getElementById('successPopup');
+
+document.getElementById('successMessage').innerText = message;
+
+popup.classList.add('show');
+
+setTimeout(()=>{
+
+popup.classList.remove('show');
+
+},2000);
+
+}
+
 /* LOAD */
 
 async function loadData(){
@@ -440,6 +546,7 @@ ad.value='';
 foto.value='';
 
 loadData();
+showSuccess("Kategori başarıyla eklendi");
 
 }catch(err){
 
@@ -524,6 +631,7 @@ foto.value='';
 closeModal('kategoriModal');
 
 loadData();
+showSuccess("Kategori güncellendi");
 
 }else{
 
@@ -625,6 +733,7 @@ fiyat.value='';
 foto.value='';
 
 loadData();
+showSuccess("Ürün başarıyla eklendi");
 
 }catch(err){
 
@@ -716,6 +825,7 @@ foto.value='';
 closeModal('urunModal');
 
 loadData();
+showSuccess("Ürün güncellendi");
 
 }else{
 
@@ -790,7 +900,7 @@ await deleteDoc(doc(db,"urunler",deleteId));
 closeDeleteModal();
 
 loadData();
-
+showSuccess("Silme işlemi başarılı");
 }
 
 
