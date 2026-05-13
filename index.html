@@ -7,7 +7,13 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI'}
-body{background:#1e1e2f;color:white}
+body{
+background:#1e1e2f;
+color:white;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+}
 
 
 .header{
@@ -84,7 +90,7 @@ color:white;
 
 select{padding:6px;border-radius:6px}
 
-.container{padding:20px}
+.container{padding:20px; flex: 1;}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px}
 
@@ -106,6 +112,74 @@ select{padding:6px;border-radius:6px}
 .modal img{width:100%;height:180px;object-fit:cover;border-radius:10px}
 .modal-close{position:absolute; top:12px; right:15px; font-size:22px; cursor:pointer; color:#f39c12; font-weight:bold; }
 
+
+/* FOOTER */
+
+.footer{
+margin-top:40px;
+background:linear-gradient(180deg,#2c2c54,#1e1e2f);
+padding:25px 20px 15px;
+border-top:1px solid rgba(255,255,255,0.08);
+}
+
+.footer-container{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+max-width:900px;
+margin:auto;
+}
+
+.footer-card{
+display:flex;
+align-items:center;
+gap:15px;
+background:#3b3b6d;
+padding:18px;
+border-radius:18px;
+text-decoration:none;
+color:white;
+transition:0.3s;
+box-shadow:0 5px 20px rgba(0,0,0,0.25);
+}
+
+.footer-card:hover{
+transform:translateY(-3px);
+background:#4b4b85;
+}
+
+.footer-icon{
+width:55px;
+height:55px;
+border-radius:15px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#f39c12;
+font-size:24px;
+flex-shrink:0;
+box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+
+.footer-card h3{
+font-size:17px;
+margin-bottom:4px;
+color:#f39c12;
+}
+
+.footer-card p{
+font-size:14px;
+color:#ddd;
+line-height:1.4;
+}
+
+.footer-bottom{
+text-align:center;
+margin-top:25px;
+font-size:13px;
+color:#aaa;
+}
+
 @media(max-width:768px){ 
   .product-grid{
   grid-template-columns:1fr;
@@ -113,6 +187,26 @@ select{padding:6px;border-radius:6px}
 
   .product{
   width:100%;
+  }
+
+  .footer-container{
+   grid-template-columns:repeat(2,1fr);
+   gap:10px;
+   }
+
+   .footer-card{
+   flex-direction:column;
+   text-align:center;
+   gap:10px;
+   padding:14px 10px;
+  }
+
+   .footer-card h3{
+   font-size:15px;
+  }
+
+   .footer-card p{
+   font-size:12px;
   }
 }
 </style>
@@ -129,7 +223,7 @@ src="logo.jpeg"
 class="brand-logo"
 >
 
-<div class="logo">Özbek Pide</div>
+<div class="logo">Özbek Pide Pizza</div>
 
 </div>
 
@@ -162,6 +256,46 @@ class="brand-logo"
 <div class="price" id="modalFiyat"></div>
 </div>
 </div>
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+<div class="footer-container">
+
+<a href="tel:+904627215252" class="footer-card">
+
+<div class="footer-icon">📞</div>
+
+<div>
+<h3>Telefon</h3>
+<p>0(462) 721 52 52</p>
+</div>
+
+</a>
+
+<a 
+href="https://maps.google.com?q=%C3%96zbek%20Pide,%20Merkez,%20Yunus%20Emre%20Cd.%2017/A,%2061700%20Arakl%C4%B1/Trabzon&ftid=0x40642d75cb08b243:0xfaabb2b17ac52916&entry=gps&shh=CAE&lucs=,94297699,100808504,94284490,94231188,94280568,47071704,94218641,94282134,100799877,94286869&g_st=iw"
+target="_blank"
+class="footer-card"
+>
+
+<div class="footer-icon">📍</div>
+
+<div>
+<h3>Yol Tarifi</h3>
+<p>Google Maps ile rota oluştur</p>
+</div>
+
+</a>
+
+</div>
+
+<div class="footer-bottom">
+© 2026 Özbek Pide - Tüm Hakları Saklıdır
+</div>
+
+</footer>
 
 <!-- 🔥 FIREBASE -->
 <script type="module">
