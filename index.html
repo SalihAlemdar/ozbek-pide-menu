@@ -289,6 +289,31 @@ font-size:13px;
 color:#aaa;
 }
 
+/* PHONE LINKS */
+
+.phone-content{
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.phone-link{
+text-decoration:none;
+color:white;
+font-size:15px;
+font-weight:600;
+transition:0.3s;
+}
+
+.phone-link:hover{
+color:#f39c12;
+transform:translateX(3px);
+}
+
+.phone-card{
+align-items:flex-start;
+}
+
 @media(max-width:768px){
 
 .logo{
@@ -370,6 +395,14 @@ font-size:15px;
 font-size:12px;
 }
 
+.phone-link{
+font-size:13px;
+}
+
+.phone-card{
+align-items:center;
+}
+
 }
 </style>
 </head>
@@ -414,13 +447,25 @@ font-size:12px;
 <footer class="footer">
   <div class="footer-container">
 
-    <a href="tel:+904627215252" class="footer-card">
-      <div class="footer-icon">📞</div>
-      <div>
-        <h3>Telefon</h3>
-        <p>0(462) 721 52 52</p>
-      </div>
-    </a>
+    <div class="footer-card phone-card">
+
+<div class="footer-icon">📞</div>
+
+<div class="phone-content">
+
+<h3>Telefon</h3>
+
+<a href="tel:+904627215252" class="phone-link">
+0 (462) 721 52 52
+</a>
+
+<a href="tel:+905353921441" class="phone-link">
+0 (535) 392 14 41
+</a>
+
+</div>
+
+</div>
 
     <a 
     href="https://maps.google.com?q=%C3%96zbek%20Pide,%20Merkez,%20Yunus%20Emre%20Cd.%2017/A,%2061700%20Arakl%C4%B1/Trabzon&ftid=0x40642d75cb08b243:0xfaabb2b17ac52916&entry=gps&shh=CAE&lucs=,94297699,100808504,94284490,94231188,94280568,47071704,94218641,94282134,100799877,94286869&g_st=iw"
