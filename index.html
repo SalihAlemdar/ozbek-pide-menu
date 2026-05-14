@@ -171,12 +171,32 @@ font-size:20px;
 font-weight:bold;
 }
 
+.sticky-back-wrapper{
+position:sticky;
+top:106px;
+z-index:950;
+background:#1e1e2f;
+padding:10px 0 14px;
+}
+
 .back{
-margin-bottom:15px;
-color:#f39c12;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+min-height:42px;
+padding:0 16px;
+background:linear-gradient(135deg,#f39c12,#e67e22);
+color:white;
+border-radius:999px;
+font-size:15px;
+font-weight:800;
 cursor:pointer;
-font-size:20px;
-font-weight:bold;
+box-shadow:0 8px 22px rgba(0,0,0,0.35);
+}
+
+.back:hover{
+transform:translateY(-2px);
+background:linear-gradient(135deg,#3b3b6d,#4b4b85);
 }
 
 .modal{
@@ -403,6 +423,17 @@ font-size:13px;
 align-items:center;
 }
 
+.sticky-back-wrapper{
+top:95px;
+padding:8px 0 12px;
+}
+
+.back{
+min-height:38px;
+padding:0 14px;
+font-size:13px;
+}
+
 }
 </style>
 </head>
@@ -430,7 +461,9 @@ align-items:center;
   <div id="kategoriView" class="grid"></div>
 
   <div id="urunView" style="display:none">
-    <div class="back" onclick="goBack()">← Geri</div>
+    <div class="sticky-back-wrapper">
+  <div class="back" onclick="goBack()">← Geri Dön</div>
+</div>
     <div id="urunList"></div>
   </div>
 </div>
