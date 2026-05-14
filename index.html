@@ -6,7 +6,13 @@
 <title>Özbek Pide Menü</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI'}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI';
+}
+
 body{
 background:#1e1e2f;
 color:white;
@@ -15,7 +21,6 @@ display:flex;
 flex-direction:column;
 overflow-x:hidden;
 }
-
 
 .header{
 display:flex;
@@ -32,24 +37,37 @@ z-index:1000;
 .brand{
 display:flex;
 align-items:center;
-gap:12px;
+gap:14px;
+min-width:0;
+}
+
+.logo-wrapper{
+display:flex;
+align-items:center;
+justify-content:center;
+flex-shrink:0;
 }
 
 .brand-logo{
-width:42px;
-height:42px;
-object-fit:cover;
-border-radius:12px;
-background:white;
-padding:4px;
-box-shadow:0 4px 15px rgba(0,0,0,0.25);
+width:78px;
+height:78px;
+object-fit:contain;
+display:block;
+filter:drop-shadow(0 8px 18px rgba(0,0,0,0.35));
+transition:0.3s;
+}
+
+.brand-logo:hover{
+transform:scale(1.05);
 }
 
 .logo{
-font-size:22px;
-font-weight:700;
+font-size:28px;
+font-weight:800;
 color:#f39c12;
 letter-spacing:0.5px;
+line-height:1.1;
+white-space:nowrap;
 }
 
 .lang-area{
@@ -87,34 +105,122 @@ background:#2c2c54;
 color:white;
 }
 
+.container{
+padding:20px;
+flex:1;
+width:100%;
+}
 
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:15px;
+}
 
-select{padding:6px;border-radius:6px}
+.product-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+}
 
-.container{padding:20px; flex: 1; width:100%; }
+.card,
+.product{
+background:#2c2c54;
+border-radius:15px;
+overflow:hidden;
+cursor:pointer;
+transition:.3s;
+box-shadow:0 6px 20px rgba(0,0,0,0.25);
+}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px}
+.card:hover,
+.product:hover{
+transform:scale(1.05);
+}
 
-.card,.product{background:#2c2c54;border-radius:15px;overflow:hidden;cursor:pointer;transition:.3s}
-.card:hover,.product:hover{transform:scale(1.05)}
+.card-image,
+.product-image{
+width:100%;
+height:320px;
+overflow:hidden;
+background:#2c2c54;
+}
 
-.card img,.product img{width:100%;aspect-ratio: 1/1; object-fit:cover; display: block;}
+.card-image img,
+.product-image img{
+width:100%;
+height:100%;
+object-fit:cover;
+object-position:center;
+display:block;
+}
 
-.card h3{text-align:center; padding:6px; }
+.card h3,
+.product h3{
+text-align:center;
+padding:10px 8px;
+font-size:18px;
+font-weight:700;
+}
 
-.product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+.price{
+text-align:center;
+padding:0 0 12px;
+color:#f39c12;
+font-size:20px;
+font-weight:bold;
+}
 
-.price{text-align:center; padding: 6px; color:#f39c12}
-.back{margin-bottom:15px;color:#f39c12;cursor:pointer}
+.back{
+margin-bottom:15px;
+color:#f39c12;
+cursor:pointer;
+font-size:20px;
+font-weight:bold;
+}
 
-.modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center}
-.modal.active{display:flex}
-.modal-content{background:#2c2c54;padding:20px;border-radius:15px;width:90%;max-width:350px;text-align:center}
-.modal img{width:100%;height:180px;object-fit:cover;border-radius:10px}
-.modal-close{position:absolute; top:12px; right:15px; font-size:22px; cursor:pointer; color:#f39c12; font-weight:bold; }
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.7);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
 
+.modal.active{
+display:flex;
+}
 
-/* FOOTER */
+.modal-content{
+background:#2c2c54;
+padding:20px;
+border-radius:15px;
+width:90%;
+max-width:350px;
+text-align:center;
+position:relative;
+}
+
+.modal img{
+width:100%;
+height:260px;
+object-fit:cover;
+object-position:center;
+border-radius:10px;
+display:block;
+}
+
+.modal-close{
+position:absolute;
+top:12px;
+right:15px;
+font-size:22px;
+cursor:pointer;
+color:#f39c12;
+font-weight:bold;
+}
 
 .footer{
 margin-top:40px;
@@ -183,34 +289,86 @@ font-size:13px;
 color:#aaa;
 }
 
-@media(max-width:768px){ 
-  .product-grid{
-  grid-template-columns:1fr;
-  }
+@media(max-width:768px){
 
-  .product{
-  width:100%;
-  }
+.logo{
+font-size:18px;
+white-space:normal;
+}
 
-  .footer-container{
-   grid-template-columns:repeat(2,1fr);
-   gap:10px;
-   }
+.header{
+padding:10px 8px;
+}
 
-   .footer-card{
-   flex-direction:column;
-   text-align:center;
-   gap:10px;
-   padding:14px 10px;
-  }
+.brand{
+gap:8px;
+}
 
-   .footer-card h3{
-   font-size:15px;
-  }
+.brand-logo{
+width:58px;
+height:58px;
+}
 
-   .footer-card p{
-   font-size:12px;
-  }
+#langSelect{
+width:105px;
+font-size:14px;
+padding:7px 10px;
+}
+
+.container{
+padding:14px;
+}
+
+.grid{
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+}
+
+.product-grid{
+grid-template-columns:1fr;
+gap:15px;
+}
+
+.card-image,
+.product-image{
+height:280px;
+}
+
+.card h3,
+.product h3{
+font-size:16px;
+padding:9px 6px;
+}
+
+.price{
+font-size:18px;
+padding-bottom:12px;
+}
+
+.product{
+width:100%;
+}
+
+.footer-container{
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+
+.footer-card{
+flex-direction:column;
+text-align:center;
+gap:10px;
+padding:14px 10px;
+}
+
+.footer-card h3{
+font-size:15px;
+}
+
+.footer-card p{
+font-size:12px;
+}
+
 }
 </style>
 </head>
@@ -218,93 +376,74 @@ color:#aaa;
 <body>
 
 <div class="header">
+  <div class="brand">
+    <div class="logo-wrapper">
+      <img src="../img/logo1.jpeg" class="brand-logo">
+    </div>
+    <div class="logo">Özbek Pide Pizza</div>
+  </div>
 
-<div class="brand">
-
-<img 
-src="logo1.jpeg"
-class="brand-logo"
->
-
-<div class="logo">Özbek Pide Pizza</div>
-
-</div>
-
-<div class="lang-area">
-
-<select id="langSelect" onchange="changeLang()">
-<option value="tr">🇹🇷 TR</option>
-<option value="en">🇬🇧 EN</option>
-<option value="ar">🇸🇦 AR</option>
-</select>
-
-</div>
-
+  <div class="lang-area">
+    <select id="langSelect" onchange="changeLang()">
+      <option value="tr">🇹🇷 TR</option>
+      <option value="en">🇬🇧 EN</option>
+      <option value="ar">🇸🇦 AR</option>
+    </select>
+  </div>
 </div>
 
 <div class="container">
-<div id="kategoriView" class="grid"></div>
+  <div id="kategoriView" class="grid"></div>
 
-<div id="urunView" style="display:none">
-<div class="back" onclick="goBack()">← Geri</div>
-<div id="urunList"></div>
-</div>
+  <div id="urunView" style="display:none">
+    <div class="back" onclick="goBack()">← Geri</div>
+    <div id="urunList"></div>
+  </div>
 </div>
 
 <div class="modal" id="urunModal">
-<div class="modal-content">
-<div class="modal-close" onclick="closeModal()">✖</div>
-<img id="modalImg">
-<h3 id="modalAd"></h3>
-<div class="price" id="modalFiyat"></div>
+  <div class="modal-content">
+    <div class="modal-close" onclick="closeModal()">✖</div>
+    <img id="modalImg">
+    <h3 id="modalAd"></h3>
+    <div class="price" id="modalFiyat"></div>
+  </div>
 </div>
-</div>
-
-<!-- FOOTER -->
 
 <footer class="footer">
+  <div class="footer-container">
 
-<div class="footer-container">
+    <a href="tel:+904627215252" class="footer-card">
+      <div class="footer-icon">📞</div>
+      <div>
+        <h3>Telefon</h3>
+        <p>0(462) 721 52 52</p>
+      </div>
+    </a>
 
-<a href="tel:+904627215252" class="footer-card">
+    <a 
+    href="https://maps.google.com?q=%C3%96zbek%20Pide,%20Merkez,%20Yunus%20Emre%20Cd.%2017/A,%2061700%20Arakl%C4%B1/Trabzon&ftid=0x40642d75cb08b243:0xfaabb2b17ac52916&entry=gps&shh=CAE&lucs=,94297699,100808504,94284490,94231188,94280568,47071704,94218641,94282134,100799877,94286869&g_st=iw"
+    target="_blank"
+    class="footer-card">
+      <div class="footer-icon">📍</div>
+      <div>
+        <h3>Yol Tarifi</h3>
+        <p>Google Maps ile rota oluştur</p>
+      </div>
+    </a>
 
-<div class="footer-icon">📞</div>
+  </div>
 
-<div>
-<h3>Telefon</h3>
-<p>0(462) 721 52 52</p>
-</div>
-
-</a>
-
-<a 
-href="https://maps.google.com?q=%C3%96zbek%20Pide,%20Merkez,%20Yunus%20Emre%20Cd.%2017/A,%2061700%20Arakl%C4%B1/Trabzon&ftid=0x40642d75cb08b243:0xfaabb2b17ac52916&entry=gps&shh=CAE&lucs=,94297699,100808504,94284490,94231188,94280568,47071704,94218641,94282134,100799877,94286869&g_st=iw"
-target="_blank"
-class="footer-card"
->
-
-<div class="footer-icon">📍</div>
-
-<div>
-<h3>Yol Tarifi</h3>
-<p>Google Maps ile rota oluştur</p>
-</div>
-
-</a>
-
-</div>
-
-<div class="footer-bottom">
-© 2026 Özbek Pide - Tüm Hakları Saklıdır
-</div>
-
+  <div class="footer-bottom">
+    © 2026 Özbek Pide - Tüm Hakları Saklıdır
+  </div>
 </footer>
 
-<!-- 🔥 FIREBASE -->
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 const firebaseConfig = {
 apiKey: "AIzaSyBR7zcqJe9lAAGngONaCj8LG6q7AejWHL0",
 authDomain: "limoncafe.firebaseapp.com",
@@ -317,151 +456,173 @@ appId: "1:495889481405:web:735b029d32c156754781d4"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🌍 Dil
 let currentLang = localStorage.getItem('lang') || 'tr';
 
-// 🔥 Firebase verileri
 let kategoriler = [];
 let urunler = [];
 
-// 🔥 VERİ ÇEK
 function loadData(){
 
-// 📂 KATEGORİLER CANLI TAKİP
 onSnapshot(collection(db, "kategoriler"), (snapshot) => {
 
 kategoriler = snapshot.docs.map(d => ({
-  id: d.id,
-  ...d.data()
+id: d.id,
+...d.data()
 }));
 
 renderKategori();
 
 });
 
-// 🍽️ ÜRÜNLER CANLI TAKİP
 onSnapshot(collection(db, "urunler"), (snapshot) => {
 
 urunler = snapshot.docs.map(d => ({
-  id: d.id,
-  ...d.data()
+id: d.id,
+...d.data()
 }));
 
-// eğer kategori açıksa anında güncelle
 const kategoriView = document.getElementById('kategoriView').style.display;
 
 if(kategoriView === 'none'){
-  // ürün ekranındaysan yeniden çiz
-  const activeIndex = window._activeKategoriIndex;
 
-  if(activeIndex !== undefined){
-    openKategori(activeIndex);
-  }
+const activeIndex = window._activeKategoriIndex;
+
+if(activeIndex !== undefined){
+openKategori(activeIndex);
+}
+
 }
 
 });
 
 }
 
-// 🌍 ÇEVİRİ
 async function translateText(text){
-  if(currentLang === 'tr') return text;
 
-  try{
-    const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=tr&tl=${currentLang}&dt=t&q=${encodeURIComponent(text)}`);
-    const data = await res.json();
-    return data[0][0][0];
-  }catch{
-    return text;
-  }
+if(currentLang === 'tr') return text;
+
+try{
+
+const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=tr&tl=${currentLang}&dt=t&q=${encodeURIComponent(text)}`);
+const data = await res.json();
+
+return data[0][0][0];
+
+}catch{
+
+return text;
+
 }
 
-// 📂 KATEGORİ
+}
+
 async function renderKategori(){
-  const div = document.getElementById('kategoriView');
-  div.innerHTML = '';
 
-  for(let i=0;i<kategoriler.length;i++){
-    const k = kategoriler[i];
-    const ad = await translateText(k.ad);
+const div = document.getElementById('kategoriView');
 
-    div.innerHTML += `
-    <div class="card" onclick="openKategori(${i})">
-      <img src="${k.foto}">
-      <h3>${ad}</h3>
-    </div>`;
-  }
+div.innerHTML = '';
+
+for(let i=0;i<kategoriler.length;i++){
+
+const k = kategoriler[i];
+
+const ad = await translateText(k.ad);
+
+div.innerHTML += `
+<div class="card" onclick="openKategori(${i})">
+  <div class="card-image">
+    <img src="${k.foto}">
+  </div>
+  <h3>${ad}</h3>
+</div>
+`;
+
 }
 
-// 🍽️ ÜRÜN
+}
+
 window.openKategori = async function(i){
-  window._activeKategoriIndex = i;
-  document.getElementById('kategoriView').style.display='none';
-  document.getElementById('urunView').style.display='block';
 
-  const list = document.getElementById('urunList');
-  list.innerHTML = '<div class="product-grid"></div>';
-  const grid = list.querySelector('.product-grid');
+window._activeKategoriIndex = i;
 
-  const seciliKat = kategoriler[i].ad;
+document.getElementById('kategoriView').style.display='none';
+document.getElementById('urunView').style.display='block';
 
-  const filtreli = urunler.filter(u => u.kategori === seciliKat);
+const list = document.getElementById('urunList');
 
-  for(let u of filtreli){
-    const ad = await translateText(u.ad);
+list.innerHTML = '<div class="product-grid"></div>';
 
-    const card = document.createElement('div');
-    card.className='product';
+const grid = list.querySelector('.product-grid');
 
-    card.innerHTML = `
+const seciliKat = kategoriler[i].ad;
 
-    <div class="card")">
-      <img src="${u.foto}">
-      <h3>${ad}</h3>
-      <div class="price">${u.fiyat}₺</div>
-    </div>
-    `;
+const filtreli = urunler.filter(u => u.kategori === seciliKat);
 
-    card.onclick = ()=>openModal(u);
-    grid.appendChild(card);
-  }
+for(let u of filtreli){
+
+const ad = await translateText(u.ad);
+
+const card = document.createElement('div');
+
+card.className='product';
+
+card.innerHTML = `
+<div class="product-image">
+  <img src="${u.foto}">
+</div>
+<h3>${ad}</h3>
+<div class="price">${u.fiyat}₺</div>
+`;
+
+card.onclick = ()=>openModal(u);
+
+grid.appendChild(card);
+
 }
 
-// 📦 MODAL
-window.openModal = async function(u){
-  document.getElementById('modalImg').src = u.foto;
-  document.getElementById('modalAd').innerText = await translateText(u.ad);
-  document.getElementById('modalFiyat').innerText = u.fiyat + '₺';
+}
 
-  document.getElementById('urunModal').classList.add('active');
+window.openModal = async function(u){
+
+document.getElementById('modalImg').src = u.foto;
+document.getElementById('modalAd').innerText = await translateText(u.ad);
+document.getElementById('modalFiyat').innerText = u.fiyat + '₺';
+
+document.getElementById('urunModal').classList.add('active');
+
 }
 
 window.goBack = function(){
-  document.getElementById('kategoriView').style.display='grid';
-  document.getElementById('urunView').style.display='none';
+
+document.getElementById('kategoriView').style.display='grid';
+document.getElementById('urunView').style.display='none';
+
 }
 
 window.changeLang = function(){
 
 currentLang = document.getElementById('langSelect').value;
+
 localStorage.setItem('lang', currentLang);
 
-// kategori yeniden çiz
 renderKategori();
 
-// eğer ürün ekranı açıksa onu da yeniden çiz
 if(document.getElementById('urunView').style.display === 'block'){
-  const activeIndex = window._activeKategoriIndex;
 
-  if(activeIndex !== undefined){
-    openKategori(activeIndex);
-  }
+const activeIndex = window._activeKategoriIndex;
+
+if(activeIndex !== undefined){
+openKategori(activeIndex);
+}
+
 }
 
 }
 
 window.closeModal=function(){
+
 document.getElementById('urunModal').classList.remove('active');
+
 }
 
 document.getElementById('urunModal').addEventListener('click',function(e){
@@ -472,7 +633,6 @@ closeModal();
 
 });
 
-// 🚀 BAŞLAT
 loadData();
 
 </script>
